@@ -1,5 +1,7 @@
 const program = require('commander');
-const _ = require('lodash');
+
+const distributeFiles = require('./distribute-files');
+const metadataService = require('./services/metadata-service');
 
 program
   .version('0.0.1')
@@ -16,56 +18,8 @@ program
   )
   .parse(process.argv);
 
-const numFiles = +program.numFiles;
+const foldersMap = distributeFiles(+program.numFiles, +program.folderDensity);
+const filesMetadata = metadataService.generateMetadata(foldersMap);
 
-const MIN_DENSITY = 1;
-const MAX_DENSITY = 5;
-const folderDensity =
-  // Caps the filder density to the expected range
-  Math.min(MAX_DENSITY, Math.max(MIN_DENSITY, +program.folderDensity));
+console.log(JSON.stringify(filesMetadata, null, 2));
 
-
-if (numFiles) {
-  console.log('Total files to generate:', numFiles);
-}
-else {
-  console.log('No files will be generated.');
-
-  process.exit();
-}
-
-let avgFilesPerFolder;
-let totalFolders;
-
-if (folderDensity) {
-  const distribution = [
-    _.random(1, 8),
-    _.random(8, 16),
-    _.random(16, 64),
-    _.random(64, 128),
-    _.random(128, 256)
-  ];
-  console.log('Folder density', folderDensity);
-  const filesDensity = distribution[folderDensity - 1];
-  const folders = [];
-  let filesCount = 0;
-  while (filesCount < numFiles) {
-    const rnd = _.random(1, filesDensity);
-    const folderFiles =
-      (filesCount + rnd <= numFiles) ? rnd : numFiles - filesCount;
-
-    folders.push(folderFiles);
-
-    filesCount += folderFiles;
-  }
-
-  totalFolders = folders.length;
-  avgFilesPerFolder = Math.round(filesCount / totalFolders);
-}
-else {
-  totalFolders = 1;
-  avgFilesPerFolder = numFiles;
-}
-
-console.log(`Average number of files per folder: ${avgFilesPerFolder}`);
-console.log(`Total container folders: ${totalFolders}`);
