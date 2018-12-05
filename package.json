@@ -14,5 +14,10 @@
     "faker": "^4.1.0",
     "inquirer": "^6.2.1",
     "lodash": "^4.17.11"
+  },
+  "devDependencies": {
+    "eslint": "^5.9.0",
+    "eslint-config-google": "^0.11.0",
+    "eslint-config-xo": "^0.25.1"
   }
 }

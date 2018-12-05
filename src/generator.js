@@ -22,7 +22,7 @@ const MIN_DENSITY = 1;
 const MAX_DENSITY = 5;
 const folderDensity =
   // Caps the filder density to the expected range
-  Math.max(MAX_DENSITY, Math.min(MIN_DENSITY, +program.folderDensity));
+  Math.min(MAX_DENSITY, Math.max(MIN_DENSITY, +program.folderDensity));
 
 
 if (numFiles) {
@@ -31,42 +31,36 @@ if (numFiles) {
 else {
   console.log('No files will be generated.');
 
-  return;
+  process.exit();
 }
 
 let avgFilesPerFolder;
 let totalFolders;
-const densityScale = [
-  8,
-  12,
-  72,
-  150,
-  320
-];
 
 if (folderDensity) {
-  const percent = folderDensity * 100 / MAX_DENSITY;
-  const distribution = Math.ceil(numFiles / (numFiles * percent / 100));
-
+  const distribution = [
+    _.random(1, 8),
+    _.random(8, 16),
+    _.random(16, 64),
+    _.random(64, 128),
+    _.random(128, 256)
+  ];
+  console.log('Folder density', folderDensity);
+  const filesDensity = distribution[folderDensity - 1];
+  const folders = [];
   let filesCount = 0;
-  let folders = _.range(distribution)
-    .map(() => {
-      const files = _.random(densityScale[folderDensity - 1]);
+  while (filesCount < numFiles) {
+    const rnd = _.random(1, filesDensity);
+    const folderFiles =
+      (filesCount + rnd <= numFiles) ? rnd : numFiles - filesCount;
 
-      filesCount += files;
+    folders.push(folderFiles);
 
-      return files;
-    });
-
-  // Adds the remaining files to a last folder
-  if (filesCount < numFiles) {
-    folders.push(numFiles - filesCount);
+    filesCount += folderFiles;
   }
 
   totalFolders = folders.length;
-  avgFilesPerFolder = Math.round(
-    folders.reduce((acc, n) => acc + n, 0) / totalFolders
-  );
+  avgFilesPerFolder = Math.round(filesCount / totalFolders);
 }
 else {
   totalFolders = 1;
