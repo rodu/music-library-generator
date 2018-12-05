@@ -2,6 +2,7 @@ const _ = require('lodash');
 const faker = require('faker');
 const md5 = require('md5');
 const genresService = require('./genres-service');
+const randomPath = require('./random-path-service');
 
 const fields = {
   GENRE: 'genre',
@@ -26,39 +27,37 @@ const date = faker.date;
 const finance = faker.finance;
 
 const generateMetadata = function(fileNumber) {
+  const trackNumber = '' + (fileNumber + 1);
+
   return {
     [fields.GENRE]: this.genre,
     [fields.ARTIST]: this.artist,
     [fields.ALBUM]: this.album,
     [fields.TITLE]: random.words(),
-    [fields.LOCATION]: this.location,
+    [fields.LOCATION]:
+        `${this.displayPath}/${trackNumber} - ${randomPath(1, '.mp3')}`,
     [fields.SIZE]: finance.account(),
     [fields.TIME]: finance.account(),
     [fields.DATE]: date.past(),
     [fields.BPM]: '' + _.random(80, 180),
     [fields.PARENT_FOLDER_ID]: this.parentFolderId,
-    [fields.TRACK_NUMBER]: '' + (fileNumber + 1),
+    [fields.TRACK_NUMBER]: trackNumber,
     [fields.DISPLAY_PATH]: this.displayPath,
     [fields.LOCATION_HASH]: this.locationHash,
     [fields.COVER_ART_HASH]: this.coverArtHash,
   };
 };
 
-const spaceRegExp = /\s/g;
-const makePath = () => random.words().replace(spaceRegExp, '/');
-const randomPath = (len = 3, extension = '') => {
-  return _.range(len).map(makePath).join('/') + extension;
-};
 const generateFileMetadata = (numFiles) => {
-  const location = randomPath(4, '.mp3');
+  const parentFolder = randomPath();
+  const location = `${parentFolder }/${randomPath(1, '.mp3')}`;
 
   return _.range(numFiles).map(generateMetadata, {
     genre: genresService.randomGenre(),
     artist: name.findName(),
     album: random.words(),
-    location,
-    parentFolderId: randomPath(),
-    displayPath: randomPath(),
+    parentFolderId: md5(parentFolder),
+    displayPath: parentFolder,
     locationHash: md5(location),
     coverArtHash: md5(randomPath(3, '.png')),
   });

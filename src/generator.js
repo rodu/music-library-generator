@@ -8,13 +8,13 @@ program
   .description('Music Library Generator')
   .option(
     '-n, --num-files [number]',
-    'The total number of audio files to generate [10]',
+    'The total number of audio files to generate. [10]',
     '10'
   )
   .option(
     '-d, --folder-density [number]',
-    'How many files should be put in each folder [10]',
-    '10'
+    'Indicate a parameter of files density per folder. [3]',
+    '3'
   )
   .parse(process.argv);
 
