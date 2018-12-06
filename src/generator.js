@@ -20,9 +20,17 @@ program
   .parse(process.argv);
 
 const foldersMap = distributeFiles(+program.numFiles, +program.folderDensity);
-const filesMetadata = metadataService.generateMetadata(foldersMap);
+const foldersMetadata = metadataService.generateMetadata(foldersMap);
 
-fileSystemService.makePath();
+fileSystemService.clearOutputFolder();
 
-console.log(JSON.stringify(filesMetadata, null, 2));
+// Creates all containing folders
+const createFolderFromMetadata = (metadata) => {
+  fileSystemService.makePath(metadata.displayPath);
+};
+foldersMetadata.forEach((folder) => {
+  folder.forEach(createFolderFromMetadata);
+});
+
+// console.log(JSON.stringify(filesMetadata, null, 2));
 
