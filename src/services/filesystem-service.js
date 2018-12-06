@@ -1,5 +1,5 @@
 const { exec } = require('child_process');
-const { OUTPUT_FOLDER } = require('../config/settings');
+const { OUTPUT_FOLDER, SAMPLE_FILE } = require('../config/settings');
 
 const fileSystemService = {
   clearOutputFolder() {
@@ -12,6 +12,11 @@ const fileSystemService = {
   makePath(pathString) {
     console.log(`Creating path at "${pathString}"`);
     exec(`mkdir -p "${pathString}"`);
+  },
+
+  createFile(location) {
+    console.log('Copying sample file to', location);
+    exec(`cp "${SAMPLE_FILE}" "${location}"`);
   }
 };
 

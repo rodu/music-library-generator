@@ -28,8 +28,13 @@ fileSystemService.clearOutputFolder();
 const createFolderFromMetadata = (metadata) => {
   fileSystemService.makePath(metadata.displayPath);
 };
+const createFilesFromMetadata = (metadata) => {
+  fileSystemService.createFile(metadata.location);
+};
+
 foldersMetadata.forEach((folder) => {
   folder.forEach(createFolderFromMetadata);
+  folder.forEach(createFilesFromMetadata);
 });
 
 // console.log(JSON.stringify(filesMetadata, null, 2));
