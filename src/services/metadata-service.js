@@ -3,6 +3,7 @@ const faker = require('faker');
 const md5 = require('md5');
 const genresService = require('./genres-service');
 const randomPath = require('./random-path-service');
+const { OUTPUT_FOLDER } = require('../config/settings');
 
 const fields = {
   GENRE: 'genre',
@@ -49,7 +50,7 @@ const generateMetadata = function(fileNumber) {
 };
 
 const generateFileMetadata = (numFiles) => {
-  const parentFolder = randomPath();
+  const parentFolder = OUTPUT_FOLDER + randomPath();
   const location = `${parentFolder }/${randomPath(1, '.mp3')}`;
 
   return _.range(numFiles).map(generateMetadata, {
