@@ -1,6 +1,8 @@
 const _ = require('lodash');
 const faker = require('faker');
 const md5 = require('md5');
+const ffmetadata = require('ffmetadata');
+
 const genresService = require('./genres-service');
 const randomPath = require('./random-path-service');
 const { OUTPUT_FOLDER } = require('../config/settings');
@@ -64,8 +66,30 @@ const generateFileMetadata = (numFiles) => {
   });
 };
 
+const writeFileMetadata = (metadata) => {
+  return new Promise((resolve, reject) => {
+    const data = {
+      genre: metadata.genre,
+      artist: metadata.artist,
+      album: metadata.album,
+      title: metadata.title
+    };
+
+    ffmetadata.write(metadata.location, data, function(err) {
+      if (err) {
+        reject(`Error writing metadata: ${err}`);
+      }
+      else {
+        resolve(metadata);
+      }
+    });
+  });
+
+};
+
 module.exports = {
   generateMetadata(foldersMap) {
     return foldersMap.map(generateFileMetadata);
-  }
+  },
+  writeFileMetadata
 };

@@ -25,16 +25,25 @@ const foldersMetadata = metadataService.generateMetadata(foldersMap);
 fileSystemService.clearOutputFolder();
 
 // Creates all containing folders
-const createFolderFromMetadata = (metadata) => {
+const createFileFromMetadata = (metadata) => {
   fileSystemService.makePath(metadata.displayPath);
-};
-const createFilesFromMetadata = (metadata) => {
   fileSystemService.createFile(metadata.location);
+
+  return metadata;
 };
+const writeFileMetadata = (metadata) => {
+  return metadataService.writeFileMetadata(metadata);
+};
+const folderCompleted = () => console.log('Folder completed.');
+const folderFailed = (message) => console.error(message);
 
 foldersMetadata.forEach((folder) => {
-  folder.forEach(createFolderFromMetadata);
-  folder.forEach(createFilesFromMetadata);
+  const metadata = folder.map(createFileFromMetadata);
+
+  Promise
+    .all(metadata.map(writeFileMetadata))
+    .then(folderCompleted)
+    .catch(folderFailed);
 });
 
 // console.log(JSON.stringify(filesMetadata, null, 2));
