@@ -1,6 +1,6 @@
 const program = require('commander');
 
-const distributeFiles = require('./distribute-files');
+const distributeFiles = require('./utils/distribute-files');
 const metadataService = require('./services/metadata-service');
 const fileSystemService = require('./services/filesystem-service');
 
