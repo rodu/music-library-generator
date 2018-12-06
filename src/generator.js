@@ -1,3 +1,4 @@
+const _ = require('lodash');
 const program = require('commander');
 
 const distributeFiles = require('./utils/distribute-files');
@@ -19,14 +20,10 @@ program
   )
   .parse(process.argv);
 
-const foldersMap = distributeFiles(+program.numFiles, +program.folderDensity);
-const foldersMetadata = metadataService.generateMetadata(foldersMap);
-
-fileSystemService.clearOutputFolder();
-
 // Creates all containing folders
 const createFileFromMetadata = (metadata) => {
-  return fileSystemService.makePath(metadata.displayPath)
+  return fileSystemService
+    .makePath(metadata.displayPath)
     .then(() => fileSystemService.createFile(metadata.location))
     .then(() => metadata);
 };
@@ -36,12 +33,36 @@ const writeFileMetadata = (metadata) => {
 const folderCompleted = () => console.log('OK.');
 const folderFailed = (message) => console.error(message);
 
-foldersMetadata.forEach((folder) => {
-  Promise.all(folder.map(createFileFromMetadata))
-    .then((metadata) => Promise.all(metadata.map(writeFileMetadata)))
-    .then(folderCompleted)
-    .catch(folderFailed);
-});
+const writeAllMetadata = function writeAllMetadata(list, index) {
+  metadataService.writeFileMetadata(list[index])
+    .then(() => {
+      const next = index + 1;
+
+      if (next < list.length) {
+        _.defer(writeAllMetadata, list, next);
+      }
+      else {
+        folderCompleted();
+      }
+    });
+};
+
+fileSystemService
+  .clearOutputFolder()
+  .then(() => {
+    const foldersMap = distributeFiles(
+      +program.numFiles,
+      +program.folderDensity
+    );
+    const foldersMetadata = metadataService.generateMetadata(foldersMap);
+
+    Promise.all(foldersMetadata.map(createFileFromMetadata))
+      //.then((metadata) => Promise.all(metadata.map(writeFileMetadata)))
+      .catch(folderFailed)
+      .then((metadata) => {
+        writeAllMetadata(metadata, 0);
+      });
+  });
 
 // console.log(JSON.stringify(filesMetadata, null, 2));
 

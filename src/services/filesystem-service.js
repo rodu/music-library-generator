@@ -1,4 +1,7 @@
 const _ = require('lodash');
+const del = require('del');
+const fs = require('fs');
+const mkdir = require('make-dir');
 
 const { exec } = require('child_process');
 const { OUTPUT_FOLDER, SAMPLE_FILE } = require('../config/settings');
@@ -7,25 +10,22 @@ const fileSystemService = {
   clearOutputFolder() {
     console.log('Clearing and creating output folder', OUTPUT_FOLDER);
 
-    exec(`rm -rf ${OUTPUT_FOLDER}`);
-    exec(`mkdir ${OUTPUT_FOLDER}`);
+    return del([OUTPUT_FOLDER])
+      .then(() => mkdir(OUTPUT_FOLDER));
   },
 
-  makePath(pathString) {
-    return new Promise((resolve) => {
-      console.log(`Creating path at "${pathString}"`);
-      exec(`mkdir -p "${pathString}"`);
-
-      _.defer(resolve);
-    });
+  makePath(path) {
+    return mkdir(path);
   },
 
   createFile(location) {
-    return new Promise((resolve) => {
+    return new Promise((resolve, reject) => {
       console.log('Copying sample file to', location);
-      exec(`cp "${SAMPLE_FILE}" "${location}"`);
+      fs.copyFile(SAMPLE_FILE, location, (err) => {
+        if (err) reject(err);
 
-      _.defer(resolve);
+        resolve();
+      });
     });
   }
 };
