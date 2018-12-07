@@ -5,17 +5,17 @@ const cliConfig = program
   .description('Music Library Generator')
   .option(
     '-n, --num-files [number]',
-    'The total number of audio files to generate. [10]',
+    'The total number of audio files to generate.',
     10
   )
   .option(
     '-d, --folder-density [number]',
-    'Indicate a parameter of files density per folder. [3]',
+    'Indicate a parameter of files density per folder.',
     3
   )
   .option(
     '-v, --verbose [boolean]',
-    'Enables verbose program logging. [false]',
+    'Enables verbose program logging.',
     false
   );
 

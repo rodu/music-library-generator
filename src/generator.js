@@ -36,9 +36,17 @@ const writeAllMetadata = function writeAllMetadata(list, index) {
 fileSystemService
   .clearOutputFolder()
   .then(() => {
+    const numFiles = parseInt(cli.getFlag('numFiles'), 10);
+
+    if (!numFiles) {
+      logger.log('Will not generate any file.');
+
+      process.exit();
+    }
+
     const foldersMap = distributeFiles(
-      cli.getFlag('numFiles'),
-      cli.getFlag('folderDensity')
+      numFiles,
+      parseInt(cli.getFlag('folderDensity'), 10)
     );
     const foldersMetadata = metadataService.generateMetadata(foldersMap);
 
