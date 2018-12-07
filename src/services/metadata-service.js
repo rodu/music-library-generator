@@ -13,15 +13,7 @@ const fields = {
   ALBUM: 'album',
   TITLE: 'title',
   LOCATION: 'location',
-  SIZE: 'size',
-  TIME: 'time',
-  DATE: 'date',
-  BPM: 'bpm',
-  PARENT_FOLDER_ID: 'parentFolderId',
-  TRACK_NUMBER: 'trackNumber',
   DISPLAY_PATH: 'displayPath',
-  LOCATION_HASH: 'locationHash',
-  COVER_ART_HASH: 'coverArtHash',
 };
 
 const random = faker.random;
