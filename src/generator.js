@@ -2,12 +2,16 @@ const _ = require('lodash');
 
 const logger = require('./utils/logger');
 const cli = require('./utils/cli');
+const progressBar = require('./utils/progress-bar');
 const distributeFiles = require('./utils/distribute-files');
 const metadataService = require('./services/metadata-service');
 const fileSystemService = require('./services/filesystem-service');
 
 // On startup we run the parse method to read the invocation arguments from CLI
 cli.parse(process.argv);
+
+// Initializes progress bars
+const metadataProgress = progressBar.create();
 
 // Creates all containing folders
 const createFileFromMetadata = (metadata) => {
@@ -24,10 +28,14 @@ const writeAllMetadata = function writeAllMetadata(list, index) {
     .then(() => {
       const next = index + 1;
 
+      metadataProgress.increment();
+
       if (next < list.length) {
         _.defer(writeAllMetadata, list, next);
       }
       else {
+        metadataProgress.stop();
+
         folderCompleted();
       }
     });
@@ -51,12 +59,9 @@ fileSystemService
     const foldersMetadata = metadataService.generateMetadata(foldersMap);
 
     Promise.all(foldersMetadata.map(createFileFromMetadata))
-      //.then((metadata) => Promise.all(metadata.map(writeFileMetadata)))
       .catch(folderFailed)
       .then((metadata) => {
+        metadataProgress.start(numFiles, 0);
         writeAllMetadata(metadata, 0);
       });
   });
-
-// logger.log(JSON.stringify(filesMetadata, null, 2));
-
