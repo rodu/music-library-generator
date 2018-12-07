@@ -24,7 +24,7 @@ const folderCompleted = () => logger.log('OK.');
 const folderFailed = (message) => console.error(message);
 
 const writeAllMetadata = function writeAllMetadata(list, index) {
-  metadataService.writeFileMetadata(list[index])
+  metadataService.writeFileMetadata(list[index], index + 1)
     .then(() => {
       const next = index + 1;
 

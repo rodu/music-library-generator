@@ -50,7 +50,7 @@ const generateFileMetadata = (numFiles) => {
   });
 };
 
-const writeFileMetadata = (metadata) => {
+const writeFileMetadata = (metadata, index) => {
   return new Promise((resolve, reject) => {
     const data = {
       genre: metadata.genre,
@@ -59,7 +59,7 @@ const writeFileMetadata = (metadata) => {
       title: metadata.title
     };
 
-    logger.log('Writing metadata for file', metadata.location);
+    logger.log(`[${index}] Writing metadata: ${metadata.location}`);
     ffmetadata.write(metadata.location, data, function(err) {
       if (err) {
         reject(`Error writing metadata: ${err}`);
