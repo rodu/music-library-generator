@@ -5,7 +5,7 @@ const ffmetadata = require('ffmetadata');
 const logger = require('../utils/logger');
 const genresService = require('./genres-service');
 const randomPath = require('./random-path-service');
-const { OUTPUT_FOLDER } = require('../config/settings');
+const { OUTPUT_FOLDER, MAX_PATH_DEPTH } = require('../config/settings');
 
 const fields = {
   GENRE: 'genre',
@@ -38,7 +38,7 @@ const generateFileMetadata = (numFiles) => {
     genre: genresService.randomGenre(),
     artist: name.findName(),
     album: random.words(),
-    displayPath: OUTPUT_FOLDER + randomPath(),
+    displayPath: OUTPUT_FOLDER + randomPath(_.random(1, MAX_PATH_DEPTH)),
   });
 };
 
