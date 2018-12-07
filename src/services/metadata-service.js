@@ -1,8 +1,8 @@
 const _ = require('lodash');
 const faker = require('faker');
-const md5 = require('md5');
 const ffmetadata = require('ffmetadata');
 
+const logger = require('../utils/logger');
 const genresService = require('./genres-service');
 const randomPath = require('./random-path-service');
 const { OUTPUT_FOLDER } = require('../config/settings');
@@ -59,7 +59,7 @@ const writeFileMetadata = (metadata) => {
       title: metadata.title
     };
 
-    console.log('Writing metadata for file', metadata.location);
+    logger.log('Writing metadata for file', metadata.location);
     ffmetadata.write(metadata.location, data, function(err) {
       if (err) {
         reject(`Error writing metadata: ${err}`);

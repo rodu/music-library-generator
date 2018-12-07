@@ -1,6 +1,7 @@
 const _ = require('lodash');
 const program = require('commander');
 
+const logger = require('./utils/logger');
 const distributeFiles = require('./utils/distribute-files');
 const metadataService = require('./services/metadata-service');
 const fileSystemService = require('./services/filesystem-service');
@@ -27,10 +28,7 @@ const createFileFromMetadata = (metadata) => {
     .then(() => fileSystemService.createFile(metadata.location))
     .then(() => metadata);
 };
-const writeFileMetadata = (metadata) => {
-  return metadataService.writeFileMetadata(metadata);
-};
-const folderCompleted = () => console.log('OK.');
+const folderCompleted = () => logger.log('OK.');
 const folderFailed = (message) => console.error(message);
 
 const writeAllMetadata = function writeAllMetadata(list, index) {
@@ -64,5 +62,5 @@ fileSystemService
       });
   });
 
-// console.log(JSON.stringify(filesMetadata, null, 2));
+// logger.log(JSON.stringify(filesMetadata, null, 2));
 

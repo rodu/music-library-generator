@@ -1,5 +1,7 @@
 const _ = require('lodash');
 
+const logger = require('./logger');
+
 const MIN_DENSITY = 1;
 const MAX_DENSITY = 5;
 
@@ -10,10 +12,10 @@ module.exports = (numFiles, folderDensity) => {
 
 
   if (numFiles) {
-    console.log('Total files to generate:', numFiles);
+    logger.log('Total files to generate:', numFiles);
   }
   else {
-    console.log('No files will be generated.');
+    logger.log('No files will be generated.');
 
     process.exit();
   }
@@ -50,8 +52,8 @@ module.exports = (numFiles, folderDensity) => {
     avgFilesPerFolder = numFiles;
   }
 
-  console.log(`Average number of files per folder: ${avgFilesPerFolder}`);
-  console.log(`Total container folders: ${totalFolders}`);
+  logger.log(`Average number of files per folder: ${avgFilesPerFolder}`);
+  logger.log(`Total container folders: ${totalFolders}`);
 
   return folders;
 };
