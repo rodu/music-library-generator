@@ -37,8 +37,8 @@ fileSystemService
   .clearOutputFolder()
   .then(() => {
     const foldersMap = distributeFiles(
-      +cli.getFlag('numFiles'),
-      +cli.getFlag('folderDensity')
+      cli.getFlag('numFiles'),
+      cli.getFlag('folderDensity')
     );
     const foldersMetadata = metadataService.generateMetadata(foldersMap);
 

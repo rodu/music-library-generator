@@ -6,12 +6,17 @@ const cliConfig = program
   .option(
     '-n, --num-files [number]',
     'The total number of audio files to generate. [10]',
-    '10'
+    10
   )
   .option(
     '-d, --folder-density [number]',
     'Indicate a parameter of files density per folder. [3]',
-    '3'
+    3
+  )
+  .option(
+    '-v, --verbose [boolean]',
+    'Enables verbose program logging. [false]',
+    false
   );
 
 let programFlags;

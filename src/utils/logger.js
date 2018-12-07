@@ -1,6 +1,10 @@
+const cli = require('./cli');
+
 const logger = {
   log(...args) {
-    console.log(...args);
+    if (cli.getFlag('verbose')) {
+      console.log(...args);
+    }
   }
 };
 
